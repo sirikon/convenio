@@ -51,9 +51,7 @@ function getDaysOfYear(): Day[] {
     const currentDate = new Date(firstDayTimestamp);
 
     const result = new Array<Day>();
-    while(true) {
-        if (currentDate.getUTCFullYear() > YEAR) break;
-
+    while(currentDate.getUTCFullYear() === YEAR) {
         const holiday = getHoliday(currentDate);
         const workHours = getWorkHours(currentDate);
         result.push({
