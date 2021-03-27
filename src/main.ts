@@ -1,10 +1,14 @@
 'use strict';
 
+import { yellow, cyan, bold, gray, brightRed, brightGreen } from 'https://deno.land/std@0.91.0/fmt/colors.ts';
 import { years, YearConfig } from './config.ts';
 
+const MARGIN = ''.padStart(2, ' ');
+
 function main() {
+    console.log();
     Object.keys(years).map(y => parseInt(y)).forEach((year) => {
-        console.log('Year', year);
+        printYearTitle(year);
         const config = years[year];
 
         const days = getDaysOfYear(config, year);
@@ -15,14 +19,40 @@ function main() {
         const effectiveWorkHours = workHours - vacationHours;
         const workHoursDiff = effectiveWorkHours - expectedWorkHours;
 
-        console.log('Work hours', workHours);
-        console.log('Vacation hours', vacationHours);
-        console.log('Expected work hours', config.expectedWorkHours)
-        console.log('Effective work hours', effectiveWorkHours, `(${workHoursDiff > 0 ? '+' : ''}${workHoursDiff})`);
+        printTable([
+            ['Work hours', fmtNum(workHours)],
+            ['Vacation hours', fmtNum(vacationHours)],
+            ['Expected work hours', fmtNum(expectedWorkHours)],
+            ['Effective work hours', `${fmtNum(effectiveWorkHours)} ${fmtDiff(workHoursDiff)}`]
+        ])
         console.log();
     });
 }
 
+function fmtNum(n: number) {
+    return yellow(n.toString());
+}
+
+function fmtDiff(n: number) {
+    if (n > 0) {
+        return `(${brightRed('+' + n.toString())})`
+    }
+    return `(${brightRed(n.toString())})`
+}
+
+function printYearTitle(year: number) {
+    console.log(`${MARGIN}${bold('Year')} ${bold(cyan(year.toString()))}`);
+}
+
+function printTable(data: any[][]) {
+    const longestDescriptionLength = Math.max.apply(null, data.map(line => (line[0].toString() as string).length)) + 3;
+    data.forEach(line => {
+        const description = (line[0].toString() as string);
+        const value = (line[1].toString() as string);
+        const spacing = gray(''.padEnd(longestDescriptionLength - description.length, '.'));
+        console.log(`${MARGIN}${description} ${spacing} ${value}`);
+    });
+}
 
 
 interface Day {
