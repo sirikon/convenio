@@ -37,7 +37,7 @@ function fmtDiff(n: number) {
     if (n > 0) {
         return `(${brightRed('+' + n.toString())})`
     }
-    return `(${brightRed(n.toString())})`
+    return `(${brightGreen(n.toString())})`
 }
 
 function printYearTitle(year: number) {
