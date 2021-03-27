@@ -38,6 +38,8 @@ const HOLIDAYS: { [day: string]: string } = {
 const VACATION_DAYS = 22;
 const VACATION_HOURS_PER_DAY = 8;
 
+const EXPECTED_WORK_HOURS = 1735;
+
 interface Day {
     date: Date;
     holiday: string | null;
@@ -85,7 +87,13 @@ function getVacationHours(): number {
     return VACATION_DAYS * VACATION_HOURS_PER_DAY;
 }
 
-const daysOfYear = getDaysOfYear();
-daysOfYear.forEach(l => console.log(l));
-console.log(countWorkHours(daysOfYear));
-console.log(getVacationHours());
+const days = getDaysOfYear();
+const workHours = countWorkHours(days);
+const vacationHours = getVacationHours();
+const effectiveWorkHours = workHours - vacationHours;
+const workHoursDiff = effectiveWorkHours - EXPECTED_WORK_HOURS;
+
+console.log('Work hours', workHours);
+console.log('Vacation hours', vacationHours);
+console.log('Expected work hours', EXPECTED_WORK_HOURS)
+console.log('Effective work hours', effectiveWorkHours, `(${workHoursDiff > 0 ? '+' : ''}${workHoursDiff})`);
